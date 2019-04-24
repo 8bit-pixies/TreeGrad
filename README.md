@@ -32,6 +32,7 @@ The requirements for this package are:
 
 Future plans:
 
+*  Add implementation for Neural Architecture search for decision boundary splits (requires a bit of clean up - tba)
 *  gpu enabled auto differentiation framework
 *  support xgboost/lightgbm additional features such as monotone constraints
 *  Support `RegressorMixin`
