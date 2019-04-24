@@ -522,7 +522,6 @@ def alpha_to_proba(alpha=0.9):
     return alpha/(alpha+1)
 
 
-
 def old_route_to_new_route(route, num_nodes):
     route_array = []
     try:
@@ -568,63 +567,6 @@ def multiclass_trees_to_param(X, y, multitrees):
     all_route = [x[2] for x in param_list]
     return all_param, all_sparse_info, all_route
 
-
-
-def decision_tree(param, X, route, sparse_info):
-    coef, inter, leaf = param
-    #coef_sparse = scipy.sparse.coo_matrix((coef, (sparse_row_col[0], sparse_row_col[1])), shape=(X.shape[1], inter.shape[0])).todense() # this is just a hack
-
-    # no sparsity
-    coef_sparse = sparse_info*coef
-    decisions = np.dot(X, coef_sparse)+inter
-    decision_soft = gumbel_softmax(decisions, tau=0.001)
-    decision_hard = np.round(decision_soft)
-    decision_hard_ = 1-decision_hard
-    decision_soft_ = 1-decision_soft
-
-    #print(m2c.export_to_python(model))
-    # (?, nodes, 2)
-    decision_proba = [decision_hard_, decision_hard]
-
-    leaf_proba = []
-    for idx, path_ in enumerate(route):
-        path = path_[0]
-        route_proba_ = [decision_proba[decision][:, node] for node, decision in path]
-        route_proba = reduce(lambda x, y: np.multiply(x, y), route_proba_)
-        leaf_proba.append(route_proba*leaf[idx])
-
-    predictions = reduce(lambda x, y: x+y, leaf_proba)
-    return predictions
-
-def decision_tree(param, X, route_array, sparse_info):
-    coef, inter, leaf = param
-
-    # wx+b
-    coef_sparse = sparse_info*coef
-    decisions = np.dot(X, coef_sparse)+inter
-
-    ## these two operations combined in this block can be framed as
-    ## composition of 1-Lipschitz activation functions (i.e. 1-Lipschitz function)
-    # sigma(wx+b)
-    decision_soft = gumbel_softmax(decisions, tau=0.0001)
-    decision_hard = np.round(decision_soft)
-    decision_proba = np.hstack([1-decision_hard, decision_hard])    
-    # >>> mq + (1-q)
-    # m
-    decision_proba_stacked = np.stack([decision_proba for _ in range(route_array.shape[0])], axis=1)
-    # 1-q
-    route_array_flip = np.stack([(1-route_array) for _ in range(X.shape[0])], axis=0)
-    raw_route_proba = decision_proba_stacked * route_array + route_array_flip
-
-    ## this operation is a downsampling operation
-    # r = prod (mq + (1-q))
-    combined_route_proba = np.prod(raw_route_proba, axis=2)
-    # equivalent to
-    #combined_route_proba = np.exp(np.sum(np.log(raw_route_proba), axis=2))
-
-
-    # r k
-    return np.dot(combined_route_proba, leaf)
 
 
 def gbm_gen(param=None, X=None, all_route=None, all_sparse_info=None, multi=False, num_classes=3, tau=0.01, eps=1e-11):
