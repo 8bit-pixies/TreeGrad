@@ -1,6 +1,8 @@
 # TreeGrad
 
-`TreeGrad` implements a naive approach to converting a Gradient Boosted Tree Model to an Online trainable model. It does this by creating differentiable tree models which can be learned via auto-differentiable frameworks.
+`TreeGrad` implements a naive approach to converting a Gradient Boosted Tree Model to an Online trainable model. It does this by creating differentiable tree models which can be learned via auto-differentiable frameworks. `TreeGrad` is in essence an implementation of Kontschieder, Peter, et al. "Deep neural decision forests." with extensions.
+
+
 
 To install
 
@@ -32,7 +34,8 @@ The requirements for this package are:
 
 Future plans:
 
-*  Add implementation for Neural Architecture search for decision boundary splits (requires a bit of clean up - tba)
+*  Add implementation for Neural Architecture search for decision boundary splits (requires a bit of clean up - TBA)
+   *  Implementation can be done quite trivially using objects residing in `tree_utils.py` - Challenge is getting this working in a sane manner with `scikit-learn` interface.
 *  gpu enabled auto differentiation framework
 *  support xgboost/lightgbm additional features such as monotone constraints
 *  Support `RegressorMixin`
@@ -53,4 +56,6 @@ In the node layer, the decision boundaries can be interpreted as _axis-parallel_
 The routing layer requires a binary routing matrix to which essentially the global product routing is applied
 
 The leaf layer is your typical fully connected dense layer.
+
+This approach is the same as the one taken by Kontschieder, Peter, et al. "Deep neural decision forests."
 
