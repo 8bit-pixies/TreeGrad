@@ -2,8 +2,6 @@
 
 `TreeGrad` implements a naive approach to converting a Gradient Boosted Tree Model to an Online trainable model. It does this by creating differentiable tree models which can be learned via auto-differentiable frameworks. `TreeGrad` is in essence an implementation of Kontschieder, Peter, et al. "Deep neural decision forests." with extensions.
 
-
-
 To install
 
 ```
@@ -11,6 +9,17 @@ python setup.py install
 ```
 
 To do: put this on `pypi`
+
+Please cite 
+
+```
+@article{siu2018automatic,
+  title={ATreeGrad: Transferring Tree Ensembles to Neural Networks },
+  author={Siu, Chapman},
+  journal={arXiv preprint arXiv:submit/2665625},
+  year={2019}
+}
+```
 
 
 # Usage
