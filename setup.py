@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-readme_file = os.path.join(os.path.dirname(os.path.abspath(__file)), 'README.md')
+readme_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'README.md')
 try:
     from m2r import parse_from_file
     readme = parse_from_file(readme_file)
@@ -10,6 +10,7 @@ except ImportError:
     with open(readme_file, 'r') as f:
         readme = f.read()
 
+ISRELEASED = True
 MAJOR = 1
 MINOR = 0
 MICRO = 0
@@ -61,11 +62,13 @@ extras_require = {'development': ['sphinx>=1.6.6',
 extras_require['complete'] = sorted(set(sum(extras_require.values(),[])))
 
 setup(
+    url="http://github.com/chappers/TreeGrad",
     name=NAME,
     version=VERSION,
     description=DESCRIPTION,
     long_description=readme,
     author=AUTHOR,
+    author_email="chpmn.siu@gmail.com",
     include_package_data=True,
     packages=find_packages(exclude=["*.tests", "*.tests.*",
                                     "tests.*", "tests"]),

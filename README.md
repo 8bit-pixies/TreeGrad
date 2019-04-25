@@ -8,9 +8,12 @@ To install
 python setup.py install
 ```
 
-To do: put this on `pypi`
+or alternatively from pypi
 
-Please cite 
+
+```
+pip install treegrad
+```
 
 ```
 @article{siu2019treegrad,
