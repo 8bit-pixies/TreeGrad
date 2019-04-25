@@ -48,7 +48,7 @@ Future plans:
 
 *  Add implementation for Neural Architecture search for decision boundary splits (requires a bit of clean up - TBA)
    *  Implementation can be done quite trivially using objects residing in `tree_utils.py` - Challenge is getting this working in a sane manner with `scikit-learn` interface.
-*  gpu enabled auto differentiation framework
+*  GPU enabled auto differentiation framework - see `notebooks/` for progress off Colab for Tensorflow 2.0 port
 *  support xgboost/lightgbm additional features such as monotone constraints
 *  Support `RegressorMixin`
 
