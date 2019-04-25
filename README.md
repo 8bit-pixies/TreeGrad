@@ -13,8 +13,8 @@ To do: put this on `pypi`
 Please cite 
 
 ```
-@article{siu2018automatic,
-  title={ATreeGrad: Transferring Tree Ensembles to Neural Networks },
+@article{siu2019treegrad,
+  title={TreeGrad: Transferring Tree Ensembles to Neural Networks},
   author={Siu, Chapman},
   journal={arXiv preprint arXiv:submit/2665625},
   year={2019}
