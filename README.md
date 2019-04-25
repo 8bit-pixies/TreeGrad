@@ -49,6 +49,21 @@ Future plans:
 *  support xgboost/lightgbm additional features such as monotone constraints
 *  Support `RegressorMixin`
 
+# Results
+
+When decision splits are reset and subsequently re-learned, TreeGrad can be competitive in performance with popular implementations (albeit an order of magnitude slower). Below is a table showing accuracy on test dataset on UCI benchmark datasets for Boosted Ensemble models (100 trees)
+
+
+| Dataset  | TreeGrad  | LightGBM  | Scikit-Learn (Gradient Boosting Classifier) |
+| ---------| --------- | --------- | ------------------------------------------- |
+| adult    | 0.860     | 0.873     | **0.874**                                   |
+| covtype  | 0.832     | **0.835** | 0.826                                       |
+| dna      | **0.950** | 0.949     | 0.946                                       |
+| glass    | 0.766     | **0.813** | 0.719                                       |
+| mandelon | **0.882** | 0.881     | 0.866                                       |
+| soybean  | **0.936** | **0.936** | 0.917                                       |
+| yeast    | **0.591** | 0.573     | 0.542                                       |
+
 
 # Implementation
 
