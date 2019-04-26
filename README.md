@@ -19,7 +19,7 @@ pip install treegrad
 @article{siu2019treegrad,
   title={TreeGrad: Transferring Tree Ensembles to Neural Networks},
   author={Siu, Chapman},
-  journal={arXiv preprint arXiv:submit/2665625},
+  journal={arXiv preprint 1904.11132},
   year={2019}
 }
 ```
