@@ -747,5 +747,12 @@ def main():
     }
     return results
 
+def generate_batch(X, batch_size=32):
+    num_batches = int(np.ceil(X.shape[0] / batch_size))
+    def batch_indices(iter):
+        idx = iter % num_batches
+        return slice(idx * batch_size, (idx+1) * batch_size)
+    return batch_indices
+
 if __name__ == "__main__":
     print(main())
