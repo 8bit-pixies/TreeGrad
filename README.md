@@ -15,6 +15,12 @@ or alternatively from pypi
 pip install treegrad
 ```
 
+Run tests:
+
+```
+python -m nose2
+```
+
 ```
 @article{siu2019treegrad,
   title={TreeGrad: Transferring Tree Ensembles to Neural Networks},
