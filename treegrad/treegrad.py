@@ -16,13 +16,12 @@ from autograd import grad
 from autograd.misc.optimizers import adam
 from autograd.misc.flatten import flatten as weights_flatten
 
-from treegrad.tree_utils import split_trees_by_classes, multiclass_trees_to_param, gbm_gen, simple_callback, multi_tree_to_param, sigmoid
-
+from treegrad.tree_utils import split_trees_by_classes, multiclass_trees_to_param, gbm_gen, simple_callback, multi_tree_to_param, sigmoid, generate_batch
 
 class BaseTreeGrad(BaseEstimator):
     def __init__(self, num_leaves=31, max_depth=-1, 
                  learning_rate=0.1, n_estimators=100,
-                 autograd_config={'refit_splits':False}
+                 autograd_config={'refit_splits':False, 'batch_size': 32}
     ):
         self.ensemble_config = {
             "num_leaves": num_leaves,
@@ -42,6 +41,8 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
     
     def partial_fit_base(self, X, y):
         check_is_fitted(self, 'base_model_')
+
+        batch_indices = generate_batch(X, self.autograd_config.get('batch_size', 32))
 
         esp = 1e-11 # where should this live?
         step_size = self.autograd_config.get('step_size', 0.05)
@@ -64,8 +65,9 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
 
             def training_loss(weights, idx=0):
                 # Training loss is the negative log-likelihood of the training labels.
-                preds = model_(weights, X)
-                loglik = -np.sum(np.log(preds+esp) * y_ohe)
+                t_idx_ = batch_indices(idx)
+                preds = model_(weights, X[t_idx_, :])
+                loglik = -np.sum(np.log(preds+esp) * y_ohe[t_idx_, :])
 
                 num_unpack = 3
                 reg = 0
@@ -83,8 +85,9 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
 
             def training_loss(weights, idx=0):
                 # Training loss is the negative log-likelihood of the training labels.
-                preds = sigmoid(model_(weights, X))
-                label_probabilities = preds * y + (1 - preds) * (1 - y)
+                t_idx_ = batch_indices(idx)
+                preds = sigmoid(model_(weights, X[t_idx_, :]))
+                label_probabilities = preds * y[t_idx_] + (1 - preds) * (1 - y[t_idx_])
                 #print(label_probabilities)
                 loglik = -np.sum(np.log(label_probabilities))
 
@@ -112,6 +115,8 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
         check_is_fitted(self, 'base_param_')
         check_is_fitted(self, 'partial_param_')
 
+        batch_indices = generate_batch(X, self.autograd_config.get('batch_size', 32))
+
         esp = 1e-11 # where should this live?
         step_size = self.autograd_config.get('step_size', 0.05)
         callback = None if self.autograd_config.get('verbose', False) else simple_callback
@@ -128,8 +133,9 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
 
             def training_loss(weights, idx=0):
                 # Training loss is the negative log-likelihood of the training labels.
-                preds = model_(weights, X)
-                loglik = -np.sum(np.log(preds+esp) * y_ohe)
+                t_idx_ = batch_indices(idx)
+                preds = model_(weights, X[t_idx_, :])
+                loglik = -np.sum(np.log(preds+esp) * y_ohe[t_idx_, :])
 
                 num_unpack = 3
                 reg = 0
@@ -146,8 +152,9 @@ class TGDClassifier(BaseTreeGrad, ClassifierMixin):
 
             def training_loss(weights, idx=0):
                 # Training loss is the negative log-likelihood of the training labels.
-                preds = sigmoid(model_(weights, X))
-                label_probabilities = preds * y + (1 - preds) * (1 - y)
+                t_idx_ = batch_indices(idx)
+                preds = sigmoid(model_(weights, X[t_idx_, :]))
+                label_probabilities = preds * y[t_idx_] + (1 - preds) * (1 - y[t_idx_])
                 #print(label_probabilities)
                 loglik = -np.sum(np.log(label_probabilities))
 
@@ -221,7 +228,7 @@ if __name__ == "__main__":
 
     # test class binary
     X, y = make_classification(100, n_classes=2, n_informative=3, n_redundant=0, n_clusters_per_class=2, n_features=8)
-    model = TGDClassifier(autograd_config={'num_iters': 1})
+    model = TGDClassifier(autograd_config={'num_iters': 100})
     model.fit(X, y)
     print(model.predict(X))
     print(np.round(model.predict_proba(X)))
