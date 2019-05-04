@@ -30,6 +30,8 @@ python -m nose2
 }
 ```
 
+Link: https://arxiv.org/abs/1904.11132
+
 
 # Usage
 
