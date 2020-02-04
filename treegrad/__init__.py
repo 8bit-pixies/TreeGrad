@@ -1,4 +1,4 @@
-from treegrad.treegrad import TGDClassifier
+from treegrad.treegrad import TGDClassifier, TGDRegressor
 import warnings
 
 try:
