@@ -1,4 +1,3 @@
-
 from sklearn.datasets import make_classification
 import numpy as np
 from treegrad import TGDClassifier
@@ -6,8 +5,15 @@ from treegrad import TGDClassifier
 
 def test_binary():
     # test class binary
-    X, y = make_classification(100, n_classes=2, n_informative=3, n_redundant=0, n_clusters_per_class=2, n_features=10)
-    model = TGDClassifier(autograd_config={'num_iters': 1})
+    X, y = make_classification(
+        100,
+        n_classes=2,
+        n_informative=3,
+        n_redundant=0,
+        n_clusters_per_class=2,
+        n_features=10,
+    )
+    model = TGDClassifier(autograd_config={"num_iters": 1})
     model.fit(X, y)
     assert model.predict(X).shape[0] == X.shape[0]
     a1 = model.predict_proba(X)
