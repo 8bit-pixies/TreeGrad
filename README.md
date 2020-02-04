@@ -22,11 +22,13 @@ python -m nose2
 ```
 
 ```
-@article{siu2019treegrad,
-  title={TreeGrad: Transferring Tree Ensembles to Neural Networks},
+@inproceedings{siu2019transferring,
+  title={Transferring Tree Ensembles to Neural Networks},
   author={Siu, Chapman},
-  journal={arXiv preprint 1904.11132},
-  year={2019}
+  booktitle={International Conference on Neural Information Processing},
+  pages={471--480},
+  year={2019},
+  organization={Springer}
 }
 ```
 
