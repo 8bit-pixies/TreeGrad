@@ -353,10 +353,10 @@ class TGDRegressor(BaseTreeGrad, RegressorMixin):
         def training_loss(weights, idx=0):
             # Training loss is the negative log-likelihood of the training labels.
             t_idx_ = batch_indices(idx)
-            preds = sigmoid(model_(weights, X[t_idx_, :]))
-            label_probabilities = preds * y[t_idx_] + (1 - preds) * (1 - y[t_idx_])
+            preds = model_(weights, X[t_idx_, :])
+            label_loss = (preds - y[t_idx_]) ** 2
             # print(label_probabilities)
-            loglik = -np.sum(np.log(label_probabilities))
+            loss = np.sum(label_loss)
 
             num_unpack = 3
             reg = 0
@@ -366,7 +366,7 @@ class TGDRegressor(BaseTreeGrad, RegressorMixin):
                 flattened, _ = weights_flatten(param_temp_[:2])
                 reg_l1 = np.sum(np.abs(flattened)) * 1.0
                 reg += reg_l1
-            return loglik + reg
+            return loss + reg
 
         training_gradient_fun = grad(training_loss)
         param_ = adam(
@@ -404,10 +404,7 @@ class TGDRegressor(BaseTreeGrad, RegressorMixin):
                 self.n_classes_,
             )
             preds = model_(self.partial_param_, X)
-            if self.n_classes_ > 2:
-                return np.argmax(preds, axis=1)
-            else:
-                return np.round(sigmoid(preds))
+            return preds
 
 
 if __name__ == "__main__":
